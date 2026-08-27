@@ -63,21 +63,28 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleResetPassword = async (judgeId) => {
+  const handleSaveJudge = async (judgeId) => {
+    const judge = judges.find(j => j.id === judgeId);
     const newPassword = passwordResets[judgeId];
-    if (!newPassword) return alert('Enter a new password');
     
     try {
       const res = await fetch(`/api/judges/${judgeId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: newPassword })
+        body: JSON.stringify({ 
+          name: judge.name, 
+          organization: judge.organization, 
+          email: judge.email, 
+          password: newPassword || undefined 
+        })
       });
       if (res.ok) {
-        alert('Password saved successfully!');
-        setPasswordResets({ ...passwordResets, [judgeId]: '' });
+        alert('Judge saved successfully!');
+        if (newPassword) {
+          setPasswordResets({ ...passwordResets, [judgeId]: '' });
+        }
       } else {
-        alert('Failed to save password');
+        alert('Failed to save judge');
       }
     } catch (error) {
       console.error(error);
@@ -252,7 +259,7 @@ export default function AdminDashboard() {
       ) : (
         <div className="glass-panel">
           <h2>Manage Judges</h2>
-          <p className="mb-4">Set new passwords for the judges here. Type the new password and click Save.</p>
+          <p className="mb-4">Edit judge names, details, or set new passwords here. Click Save when done.</p>
           <table>
             <thead>
               <tr>
@@ -266,9 +273,30 @@ export default function AdminDashboard() {
             <tbody>
               {judges.map(judge => (
                 <tr key={judge.id}>
-                  <td style={{ fontWeight: 600 }}>{judge.name}</td>
-                  <td>{judge.organization || '-'}</td>
-                  <td>{judge.email || '-'}</td>
+                  <td>
+                    <input 
+                      type="text" 
+                      style={{ marginBottom: 0, padding: '0.4rem', fontSize: '0.9rem' }}
+                      value={judge.name} 
+                      onChange={(e) => setJudges(judges.map(j => j.id === judge.id ? { ...j, name: e.target.value } : j))} 
+                    />
+                  </td>
+                  <td>
+                    <input 
+                      type="text" 
+                      style={{ marginBottom: 0, padding: '0.4rem', fontSize: '0.9rem' }}
+                      value={judge.organization || ''} 
+                      onChange={(e) => setJudges(judges.map(j => j.id === judge.id ? { ...j, organization: e.target.value } : j))} 
+                    />
+                  </td>
+                  <td>
+                    <input 
+                      type="text" 
+                      style={{ marginBottom: 0, padding: '0.4rem', fontSize: '0.9rem' }}
+                      value={judge.email || ''} 
+                      onChange={(e) => setJudges(judges.map(j => j.id === judge.id ? { ...j, email: e.target.value } : j))} 
+                    />
+                  </td>
                   <td>
                     <input 
                       type="text" 
@@ -280,7 +308,7 @@ export default function AdminDashboard() {
                   </td>
                   <td>
                     <button 
-                      onClick={() => handleResetPassword(judge.id)}
+                      onClick={() => handleSaveJudge(judge.id)}
                       className="btn"
                       style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
                     >
