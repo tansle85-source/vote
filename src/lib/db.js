@@ -2,7 +2,8 @@ import Database from 'better-sqlite3';
 import path from 'path';
 
 // Create or open the database file
-const dbPath = path.join(process.cwd(), 'voting.db');
+// Use environment variable for persistent storage on hosting, fallback to local directory
+const dbPath = process.env.DB_PATH || path.join(process.cwd(), 'voting.db');
 const db = new Database(dbPath, { verbose: console.log });
 
 // Initialize database schema
