@@ -1,12 +1,13 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import os from 'os';
 
 // Create or open the database file
-// Auto-detect Hostinger's deployment folder and save the DB safely outside of it
+// Auto-detect Hostinger's deployment folder and save the DB safely in the user's home directory
 let dbPath = process.env.DB_PATH || path.join(process.cwd(), 'voting.db');
-if (process.cwd().includes('hbuilds/source/repository')) {
-  // Save in the domain root folder (3 levels up from repository)
-  dbPath = path.join(process.cwd(), '../../..', 'voting.db');
+if (process.cwd().includes('hbuilds') || process.cwd().includes('u394663060')) {
+  // Save directly in the user's home directory, guaranteed to survive deployments!
+  dbPath = path.join(os.homedir(), 'voting_production.db');
 }
 const db = new Database(dbPath, { verbose: console.log });
 
