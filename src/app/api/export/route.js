@@ -28,7 +28,8 @@ export async function GET() {
     // Calculate leaderboard to determine ranks
     const leaderboard = papers.map(paper => {
       const paperMarks = marks.filter(m => m.paper_id === paper.id);
-      const totalScore = paperMarks.reduce((sum, m) => sum + m.score, 0);
+      const totalSum = paperMarks.reduce((sum, m) => sum + m.score, 0);
+      const totalScore = parseFloat((totalSum / judges.length).toFixed(2));
       return { ...paper, totalScore };
     }).sort((a, b) => b.totalScore - a.totalScore);
 

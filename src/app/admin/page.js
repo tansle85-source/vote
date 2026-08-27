@@ -202,19 +202,29 @@ export default function AdminDashboard() {
                     <th>Paper Title</th>
                     <th>Author</th>
                     <th>Total Score</th>
+                    <th>Oral Score</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {leaderboard.map((paper, index) => (
                     <tr key={paper.id}>
-                      <td>#{index + 1}</td>
-                      <td style={{ fontWeight: 600 }}>{paper.title}</td>
+                      <td>
+                        <strong>#{index + 1}</strong>
+                      </td>
+                      <td>{paper.title}</td>
                       <td>{paper.author}</td>
-                      <td className="score-display" style={{ textAlign: 'left', fontSize: '1.2rem' }}>
-                        {paper.totalScore}
+                      <td>
+                        <strong style={{ color: 'var(--accent-color)', fontSize: '1.2rem' }}>
+                          {paper.totalScore}
+                        </strong>
                       </td>
                       <td>
+                        <strong style={{ color: '#f59e0b', fontSize: '1.2rem' }}>
+                          {paper.oralScore !== undefined ? paper.oralScore : 0}
+                        </strong>
+                      </td>
+                      <td>    
                         <button 
                           onClick={() => handleDelete(paper.id)}
                           className="btn btn-secondary"

@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 
 export default function Home() {
   const [winner, setWinner] = useState(null);
+  const [oralWinner, setOralWinner] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,8 +13,14 @@ export default function Home() {
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
-          // The leaderboard API already sorts by totalScore descending
+          // Overall winner
           setWinner(data[0]);
+          
+          // Best Oral Presentation winner
+          const sortedByOral = [...data].sort((a, b) => b.oralScore - a.oralScore);
+          if (sortedByOral[0] && sortedByOral[0].oralScore > 0) {
+            setOralWinner(sortedByOral[0]);
+          }
         }
         setLoading(false);
       })
@@ -35,14 +42,32 @@ export default function Home() {
       </p>
 
       {!loading && winner && (
-        <div className="glass-panel text-center animate-fade-in" style={{ width: '100%', maxWidth: '800px', marginBottom: '2rem', border: '2px solid var(--accent-color)', background: 'linear-gradient(to bottom right, #ffffff, #f0fdf4)' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏆</div>
-          <h2 style={{ color: 'var(--accent-color)', marginBottom: '0.5rem' }}>Current Leader</h2>
-          <h3 style={{ fontSize: '1.5rem', margin: '0 0 0.5rem 0' }}>{winner.title}</h3>
-          <p style={{ fontWeight: '600', marginBottom: '1rem' }}>By: {winner.author}</p>
-          <div className="score-display" style={{ fontSize: '2rem', justifyContent: 'center', display: 'flex' }}>
-            Score: {winner.totalScore}
+        <div className="grid grid-cols-2" style={{ gap: '2rem', width: '100%', maxWidth: '800px', marginBottom: '2rem' }}>
+          
+          {/* Overall Winner Card */}
+          <div className="glass-panel text-center animate-fade-in" style={{ border: '2px solid var(--accent-color)', background: 'linear-gradient(to bottom right, #ffffff, #f0fdf4)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🏆</div>
+            <h2 style={{ color: 'var(--accent-color)', marginBottom: '0.5rem' }}>Overall Leader</h2>
+            <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0' }}>{winner.title}</h3>
+            <p style={{ fontWeight: '600', marginBottom: '1rem', fontSize: '0.9rem' }}>By: {winner.author}</p>
+            <div className="score-display" style={{ fontSize: '1.5rem', justifyContent: 'center', display: 'flex' }}>
+              Score: {winner.totalScore}
+            </div>
           </div>
+
+          {/* Oral Winner Card */}
+          {oralWinner && (
+            <div className="glass-panel text-center animate-fade-in" style={{ border: '2px solid #f59e0b', background: 'linear-gradient(to bottom right, #ffffff, #fffbeb)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '0.5rem' }}>🎤</div>
+              <h2 style={{ color: '#f59e0b', marginBottom: '0.5rem' }}>Best Presentation</h2>
+              <h3 style={{ fontSize: '1.2rem', margin: '0 0 0.5rem 0' }}>{oralWinner.title}</h3>
+              <p style={{ fontWeight: '600', marginBottom: '1rem', fontSize: '0.9rem' }}>By: {oralWinner.author}</p>
+              <div className="score-display" style={{ fontSize: '1.5rem', justifyContent: 'center', display: 'flex', color: '#f59e0b', borderColor: '#f59e0b', backgroundColor: '#fffbeb' }}>
+                Oral Score: {oralWinner.oralScore}
+              </div>
+            </div>
+          )}
+          
         </div>
       )}
 
