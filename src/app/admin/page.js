@@ -96,9 +96,17 @@ export default function AdminDashboard() {
     try {
       const res = await fetch('/api/leaderboard');
       const data = await res.json();
-      setLeaderboard(data);
+      if (res.ok && Array.isArray(data)) {
+        setLeaderboard(data);
+      } else {
+        console.error("API Error:", data);
+        alert("API Error: " + (data.error || "Unknown error"));
+        setLeaderboard([]);
+      }
     } catch (error) {
       console.error("Failed to fetch leaderboard", error);
+      alert("Failed to fetch leaderboard: " + error.message);
+      setLeaderboard([]);
     }
     setLoading(false);
   };

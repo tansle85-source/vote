@@ -13,7 +13,7 @@ export default function Home() {
     fetch('/api/leaderboard')
       .then(res => res.json())
       .then(data => {
-        if (data && data.length > 0) {
+        if (Array.isArray(data) && data.length > 0) {
           setLeaderboard(data);
           // Overall winner
           setWinner(data[0]);
