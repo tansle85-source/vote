@@ -10,6 +10,7 @@ export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('papers'); // 'papers' or 'judges'
   const [judges, setJudges] = useState([]);
   const [passwordResets, setPasswordResets] = useState({});
+  const [selectedPaperDetails, setSelectedPaperDetails] = useState(null);
 
   const [papers, setPapers] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
@@ -226,8 +227,15 @@ export default function AdminDashboard() {
                       </td>
                       <td>    
                         <button 
+                          onClick={() => setSelectedPaperDetails(paper)}
+                          className="btn btn-secondary" 
+                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem', marginRight: '0.5rem' }}
+                        >
+                          View
+                        </button>
+                        <button 
                           onClick={() => handleDelete(paper.id)}
-                          className="btn btn-secondary"
+                          className="btn btn-secondary" 
                           style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
                         >
                           Delete
@@ -283,6 +291,41 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {selectedPaperDetails && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '2rem' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div className="flex justify-between items-center mb-4">
+              <h2>{selectedPaperDetails.title}</h2>
+              <button onClick={() => setSelectedPaperDetails(null)} className="btn btn-secondary">Close</button>
+            </div>
+            <p><strong>Author:</strong> {selectedPaperDetails.author}</p>
+            <div style={{ margin: '2rem 0' }}>
+              {selectedPaperDetails.judgeDetails && selectedPaperDetails.judgeDetails.map(jd => (
+                <div key={jd.judgeId} style={{ marginBottom: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.5)', borderRadius: '8px' }}>
+                  <h3 style={{ borderBottom: '1px solid #ccc', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
+                    {jd.judgeName} <span style={{ float: 'right', color: 'var(--accent-color)' }}>{jd.totalGiven > 0 ? `${jd.totalGiven} / 100` : 'Not Evaluated'}</span>
+                  </h3>
+                  {jd.totalGiven > 0 && (
+                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem', marginBottom: '1rem' }}>
+                      {Object.entries(jd.criteriaScores).map(([critName, score]) => (
+                        <div key={critName}>
+                          <span style={{ color: '#555' }}>{critName}:</span> <strong>{score}</strong>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {jd.comment && (
+                    <div style={{ background: '#fff', padding: '1rem', borderRadius: '4px', fontSize: '0.9rem' }}>
+                      <strong>Comment:</strong> <i>"{jd.comment}"</i>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

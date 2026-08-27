@@ -5,6 +5,10 @@ export async function GET() {
   try {
     const papers = db.prepare('SELECT * FROM papers').all();
     const marksData = db.prepare('SELECT * FROM marks').all();
+    const commentsData = db.prepare('SELECT * FROM comments').all();
+    const judges = db.prepare('SELECT * FROM judges').all();
+    const criteria = db.prepare('SELECT * FROM criteria').all();
+    
     const judgeCountObj = db.prepare('SELECT COUNT(*) as count FROM judges').get();
     const judgeCount = judgeCountObj.count || 4; // fallback to 4 just in case
     
@@ -15,6 +19,7 @@ export async function GET() {
     // Aggregate scores per paper
     const leaderboard = papers.map(paper => {
       const paperMarks = marksData.filter(m => m.paper_id === paper.id);
+      const paperComments = commentsData.filter(c => c.paper_id === paper.id);
       
       const totalSum = paperMarks.reduce((sum, m) => sum + m.score, 0);
       const totalScore = parseFloat((totalSum / judgeCount).toFixed(2));
@@ -23,18 +28,34 @@ export async function GET() {
       const oralSum = oralMarks.reduce((sum, m) => sum + m.score, 0);
       const oralScore = parseFloat((oralSum / judgeCount).toFixed(2));
       
-      // Calculate breakdown by judge (also optional, good for debugging)
-      const judgeBreakdown = {};
-      paperMarks.forEach(m => {
-        if (!judgeBreakdown[m.judge_id]) judgeBreakdown[m.judge_id] = 0;
-        judgeBreakdown[m.judge_id] += m.score;
+      // Calculate detailed breakdown by judge
+      const judgeDetails = judges.map(judge => {
+        const judgeMarks = paperMarks.filter(m => m.judge_id === judge.id);
+        const totalGiven = judgeMarks.reduce((sum, m) => sum + m.score, 0);
+        const commentObj = paperComments.find(c => c.judge_id === judge.id);
+        
+        const criteriaScores = {};
+        judgeMarks.forEach(m => {
+          const crit = criteria.find(c => c.id === m.criteria_id);
+          if (crit) {
+            criteriaScores[crit.name] = m.score;
+          }
+        });
+
+        return {
+          judgeId: judge.id,
+          judgeName: judge.name,
+          totalGiven,
+          criteriaScores,
+          comment: commentObj ? commentObj.comment : ''
+        };
       });
 
       return {
         ...paper,
         totalScore,
         oralScore,
-        judgeBreakdown
+        judgeDetails
       };
     });
 
