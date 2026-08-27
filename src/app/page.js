@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 export default function Home() {
   const [winner, setWinner] = useState(null);
   const [oralWinner, setOralWinner] = useState(null);
+  const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -13,6 +14,7 @@ export default function Home() {
       .then(res => res.json())
       .then(data => {
         if (data && data.length > 0) {
+          setLeaderboard(data);
           // Overall winner
           setWinner(data[0]);
           
@@ -68,6 +70,41 @@ export default function Home() {
             </div>
           )}
           
+        </div>
+      )}
+
+      {/* Full Live Leaderboard Table */}
+      {!loading && leaderboard.length > 0 && (
+        <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', marginBottom: '3rem' }}>
+          <h2 style={{ marginBottom: '1.5rem', textAlign: 'center' }}>Live Leaderboard Ranking</h2>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+              <thead>
+                <tr style={{ borderBottom: '2px solid #eee' }}>
+                  <th style={{ padding: '1rem' }}>Rank</th>
+                  <th style={{ padding: '1rem' }}>Paper Title</th>
+                  <th style={{ padding: '1rem' }}>Author</th>
+                  <th style={{ padding: '1rem' }}>Total Score</th>
+                  <th style={{ padding: '1rem' }}>Oral Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {leaderboard.map((paper, index) => (
+                  <tr key={paper.id} style={{ borderBottom: '1px solid #eee' }}>
+                    <td style={{ padding: '1rem' }}><strong>#{index + 1}</strong></td>
+                    <td style={{ padding: '1rem' }}>{paper.title}</td>
+                    <td style={{ padding: '1rem', color: '#555' }}>{paper.author}</td>
+                    <td style={{ padding: '1rem' }}>
+                      <strong style={{ color: 'var(--accent-color)', fontSize: '1.1rem' }}>{paper.totalScore}</strong>
+                    </td>
+                    <td style={{ padding: '1rem' }}>
+                      <strong style={{ color: '#f59e0b', fontSize: '1.1rem' }}>{paper.oralScore !== undefined ? paper.oralScore : 0}</strong>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
