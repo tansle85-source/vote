@@ -29,7 +29,11 @@ export async function GET() {
     const leaderboard = papers.map(paper => {
       const paperMarks = marks.filter(m => m.paper_id === paper.id);
       const totalSum = paperMarks.reduce((sum, m) => sum + m.score, 0);
-      const totalScore = parseFloat((totalSum / judges.length).toFixed(2));
+      
+      const uniqueJudges = new Set(paperMarks.map(m => m.judge_id)).size;
+      const divisor = uniqueJudges > 0 ? uniqueJudges : 1;
+      
+      const totalScore = parseFloat((totalSum / divisor).toFixed(2));
       return { ...paper, totalScore };
     }).sort((a, b) => b.totalScore - a.totalScore);
 

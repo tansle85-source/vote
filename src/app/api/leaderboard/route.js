@@ -9,9 +9,6 @@ export async function GET() {
     const judges = db.prepare('SELECT * FROM judges').all();
     const criteria = db.prepare('SELECT * FROM criteria').all();
     
-    const judgeCountObj = db.prepare('SELECT COUNT(*) as count FROM judges').get();
-    const judgeCount = judgeCountObj.count || 4; // fallback to 4 just in case
-    
     // Get the ID for Oral Presentation Skills
     const oralCriteria = db.prepare("SELECT id FROM criteria WHERE name = 'Oral Presentation Skills'").get();
     const oralCriteriaId = oralCriteria ? oralCriteria.id : 5;
@@ -22,11 +19,15 @@ export async function GET() {
       const paperComments = commentsData.filter(c => c.paper_id === paper.id);
       
       const totalSum = paperMarks.reduce((sum, m) => sum + m.score, 0);
-      const totalScore = parseFloat((totalSum / judgeCount).toFixed(2));
+      
+      const uniqueJudges = new Set(paperMarks.map(m => m.judge_id)).size;
+      const divisor = uniqueJudges > 0 ? uniqueJudges : 1;
+      
+      const totalScore = parseFloat((totalSum / divisor).toFixed(2));
       
       const oralMarks = paperMarks.filter(m => m.criteria_id === oralCriteriaId);
       const oralSum = oralMarks.reduce((sum, m) => sum + m.score, 0);
-      const oralScore = parseFloat((oralSum / judgeCount).toFixed(2));
+      const oralScore = parseFloat((oralSum / divisor).toFixed(2));
       
       // Calculate detailed breakdown by judge
       const judgeDetails = judges.map(judge => {
