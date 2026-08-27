@@ -263,7 +263,41 @@ export default function AdminDashboard() {
             </div>
           )}
         </div>
-      </div>
+        
+        <div className="glass-panel" style={{ marginTop: '2rem' }}>
+          <h2>Top Oral Presentation Skills</h2>
+          {leaderboard.length === 0 ? (
+            <p>No papers submitted yet.</p>
+          ) : (
+            <div style={{ overflowX: 'auto' }}>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Rank</th>
+                    <th>Paper Title</th>
+                    <th>Oral Score</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...leaderboard]
+                    .sort((a, b) => (b.oralScore || 0) - (a.oralScore || 0))
+                    .map((paper, index) => (
+                    <tr key={paper.id}>
+                      <td><strong>#{index + 1}</strong></td>
+                      <td>{paper.title}</td>
+                      <td>
+                        <strong style={{ color: '#f59e0b', fontSize: '1.2rem' }}>
+                          {paper.oralScore !== undefined ? paper.oralScore : 0}
+                        </strong>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+        </div>
       ) : (
         <div className="glass-panel">
           <h2>Manage Judges</h2>
