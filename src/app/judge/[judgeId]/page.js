@@ -54,7 +54,9 @@ export default function JudgeScoring() {
         setCriteria(data);
         // Initialize marks state
         const initialMarks = {};
-        data.forEach(c => initialMarks[c.id] = c.max_score / 2);
+        data.forEach(c => {
+          initialMarks[c.id] = 0;
+        });
         setMarks(initialMarks);
       });
   }, [judgeId, router]);
@@ -156,9 +158,9 @@ export default function JudgeScoring() {
                           if (Object.keys(data.marks).length > 0) {
                             setMarks(data.marks);
                           } else {
-                            // Reset to defaults
+                            // Reset to 0
                             const defaultMarks = {};
-                            criteria.forEach(c => defaultMarks[c.id] = c.max_score / 2);
+                            criteria.forEach(c => defaultMarks[c.id] = 0);
                             setMarks(defaultMarks);
                           }
                           setComment(data.comment || "");
