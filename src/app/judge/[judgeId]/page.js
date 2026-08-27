@@ -148,7 +148,25 @@ export default function JudgeScoring() {
                   key={paper.id}
                   onClick={() => {
                     setSelectedPaper(paper.id);
-                    setComment(""); // Reset comment on paper change
+                    // Fetch existing marks and comment for this paper
+                    fetch(`/api/marks?judge_id=${judgeId}&paper_id=${paper.id}`)
+                      .then(res => res.json())
+                      .then(data => {
+                        if (data && data.marks) {
+                          if (Object.keys(data.marks).length > 0) {
+                            setMarks(data.marks);
+                          } else {
+                            // Reset to defaults
+                            const defaultMarks = {};
+                            criteria.forEach(c => defaultMarks[c.id] = c.max_score / 2);
+                            setMarks(defaultMarks);
+                          }
+                          setComment(data.comment || "");
+                        }
+                      })
+                      .catch(err => {
+                        console.error("Failed to load existing marks", err);
+                      });
                   }}
                   className={`btn ${selectedPaper === paper.id ? '' : 'btn-secondary'}`}
                   style={{ textAlign: 'left', justifyContent: 'flex-start' }}

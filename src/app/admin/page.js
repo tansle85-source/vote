@@ -183,7 +183,10 @@ export default function AdminDashboard() {
         <div className="glass-panel">
           <div className="flex justify-between items-center mb-4">
             <h2>Live Leaderboard</h2>
-            <button onClick={fetchData} className="btn btn-secondary">Refresh</button>
+            <div>
+              <button onClick={fetchData} className="btn btn-secondary" style={{ marginRight: '0.5rem' }}>Refresh</button>
+              <a href="/api/export" download className="btn" style={{ textDecoration: 'none' }}>Download CSV</a>
+            </div>
           </div>
           
           {loading ? (
