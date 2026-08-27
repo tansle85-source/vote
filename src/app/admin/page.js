@@ -73,10 +73,10 @@ export default function AdminDashboard() {
         body: JSON.stringify({ password: newPassword })
       });
       if (res.ok) {
-        alert('Password reset successfully!');
+        alert('Password saved successfully!');
         setPasswordResets({ ...passwordResets, [judgeId]: '' });
       } else {
-        alert('Failed to reset password');
+        alert('Failed to save password');
       }
     } catch (error) {
       console.error(error);
@@ -231,7 +231,7 @@ export default function AdminDashboard() {
       ) : (
         <div className="glass-panel">
           <h2>Manage Judges</h2>
-          <p className="mb-4">Reset passwords for the judges here.</p>
+          <p className="mb-4">Set new passwords for the judges here. Type the new password and click Save.</p>
           <table>
             <thead>
               <tr>
@@ -263,7 +263,7 @@ export default function AdminDashboard() {
                       className="btn"
                       style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
                     >
-                      Reset
+                      Save
                     </button>
                   </td>
                 </tr>
