@@ -8,7 +8,7 @@ const inter = Inter({
 });
 
 export const metadata = {
-  title: "Tech Paper Voting System",
+  title: "APTS 2026 Penang Chapter",
   description: "Voting system for technical paper competition",
 };
 
