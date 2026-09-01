@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className={`${inter.variable}`}>
       <body>
         <nav className="navbar">
-          <Link href="/" className="nav-brand">🏆 TechVote</Link>
+          <Link href="/" className="nav-brand">🏆 APTS 2026 Penang Chapter</Link>
           <div className="nav-links">
             <Link href="/judge">Judge Portal</Link>
             <Link href="/admin">Admin Dashboard</Link>
