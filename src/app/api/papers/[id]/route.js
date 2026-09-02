@@ -4,8 +4,9 @@ import { NextResponse } from 'next/server';
 export async function DELETE(request, { params }) {
   try {
     const { id } = await params;
-    // Delete marks first due to foreign key
+    // Delete marks and comments first due to foreign key
     db.prepare('DELETE FROM marks WHERE paper_id = ?').run(id);
+    db.prepare('DELETE FROM comments WHERE paper_id = ?').run(id);
     db.prepare('DELETE FROM papers WHERE id = ?').run(id);
     
     return NextResponse.json({ success: true });
