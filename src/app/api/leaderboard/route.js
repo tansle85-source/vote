@@ -18,8 +18,7 @@ export async function GET() {
       const paperMarks = marksData.filter(m => m.paper_id === paper.id);
       const paperComments = commentsData.filter(c => c.paper_id === paper.id);
       
-      const mainMarks = paperMarks.filter(m => m.criteria_id !== oralCriteriaId);
-      const totalSum = mainMarks.reduce((sum, m) => sum + m.score, 0);
+      const totalSum = paperMarks.reduce((sum, m) => sum + m.score, 0);
       
       const divisor = 4; // Always divide by 4 judges
       

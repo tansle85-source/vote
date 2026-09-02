@@ -96,7 +96,7 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/api/leaderboard');
+      const res = await fetch(`/api/leaderboard?t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (res.ok && Array.isArray(data)) {
         setLeaderboard(data);
