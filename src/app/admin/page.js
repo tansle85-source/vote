@@ -442,7 +442,7 @@ export default function AdminDashboard() {
 
       {selectedPaperDetails && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '2rem' }}>
-          <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '95vw', maxHeight: '90vh', overflowY: 'auto' }}>
             <div className="flex justify-between items-center mb-4">
               <h2>{selectedPaperDetails.title}</h2>
               <button onClick={() => setSelectedPaperDetails(null)} className="btn btn-secondary">Close</button>
