@@ -339,28 +339,47 @@ export default function AdminDashboard() {
               <button onClick={() => setSelectedPaperDetails(null)} className="btn btn-secondary">Close</button>
             </div>
             <p><strong>Author:</strong> {selectedPaperDetails.author}</p>
-            <div style={{ margin: '2rem 0' }}>
-              {selectedPaperDetails.judgeDetails && selectedPaperDetails.judgeDetails.map(jd => (
-                <div key={jd.judgeId} style={{ marginBottom: '1.5rem', padding: '1rem', background: 'rgba(255,255,255,0.5)', borderRadius: '8px' }}>
-                  <h3 style={{ borderBottom: '1px solid #ccc', paddingBottom: '0.5rem', marginBottom: '1rem' }}>
-                    {jd.judgeName} <span style={{ float: 'right', color: 'var(--accent-color)' }}>{jd.totalGiven > 0 ? `${jd.totalGiven} / 100` : 'Not Evaluated'}</span>
-                  </h3>
-                  {jd.totalGiven > 0 && (
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.9rem', marginBottom: '1rem' }}>
-                      {Object.entries(jd.criteriaScores).map(([critName, score]) => (
-                        <div key={critName}>
-                          <span style={{ color: '#555' }}>{critName}:</span> <strong>{score}</strong>
-                        </div>
+            <div style={{ margin: '2rem 0', overflowX: 'auto' }}>
+              {(() => {
+                const criteriaKeys = Array.from(new Set(
+                  selectedPaperDetails.judgeDetails.flatMap(jd => Object.keys(jd.criteriaScores || {}))
+                ));
+                
+                return (
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Judge Name</th>
+                        {criteriaKeys.map(key => (
+                          <th key={key} style={{ textAlign: 'center' }}>{key}</th>
+                        ))}
+                        <th style={{ textAlign: 'center' }}>Total</th>
+                        <th>Comment</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {selectedPaperDetails.judgeDetails.map(jd => (
+                        <tr key={jd.judgeId}>
+                          <td><strong>{jd.judgeName}</strong></td>
+                          {jd.totalGiven > 0 ? (
+                            <>
+                              {criteriaKeys.map(key => (
+                                <td key={key} style={{ textAlign: 'center' }}>{jd.criteriaScores[key] !== undefined ? jd.criteriaScores[key] : '-'}</td>
+                              ))}
+                              <td style={{ textAlign: 'center', color: 'var(--accent-color)', fontWeight: 'bold', fontSize: '1.1rem' }}>{jd.totalGiven}</td>
+                              <td><i style={{ color: '#555' }}>{jd.comment || ''}</i></td>
+                            </>
+                          ) : (
+                            <td colSpan={criteriaKeys.length + 2} style={{ textAlign: 'center', color: '#999', fontStyle: 'italic' }}>
+                              Not Evaluated
+                            </td>
+                          )}
+                        </tr>
                       ))}
-                    </div>
-                  )}
-                  {jd.comment && (
-                    <div style={{ background: '#fff', padding: '1rem', borderRadius: '4px', fontSize: '0.9rem' }}>
-                      <strong>Comment:</strong> <i>"{jd.comment}"</i>
-                    </div>
-                  )}
-                </div>
-              ))}
+                    </tbody>
+                  </table>
+                );
+              })()}
             </div>
           </div>
         </div>
