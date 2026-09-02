@@ -1,34 +1,8 @@
 "use client";
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
 
 export default function Home() {
-  const [winner, setWinner] = useState(null);
-  const [oralWinner, setOralWinner] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('/api/leaderboard')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) {
-          // Overall winner
-          setWinner(data[0]);
-          
-          // Best Oral Presentation winner
-          const sortedByOral = [...data].sort((a, b) => b.oralScore - a.oralScore);
-          if (sortedByOral[0] && sortedByOral[0].oralScore > 0) {
-            setOralWinner(sortedByOral[0]);
-          }
-        }
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error("Failed to fetch winner", err);
-        setLoading(false);
-      });
-  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-4 animate-fade-in" style={{ gap: '3rem' }}>
@@ -64,50 +38,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Highlights Section (Leaderboard table removed) */}
-      {!loading && winner && (
-        <div style={{ width: '100%', maxWidth: '900px', marginTop: '2rem', marginBottom: '4rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '2rem' }}>
-            <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.1))' }}></div>
-            <h3 style={{ margin: '0 1.5rem', color: 'var(--text-secondary)', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Current Highlights</h3>
-            <div style={{ height: '1px', flex: 1, background: 'linear-gradient(to left, transparent, rgba(0,0,0,0.1))' }}></div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2" style={{ gap: '1.5rem' }}>
-            
-            {/* Overall Winner Card */}
-            <div className="glass-panel animate-fade-in" style={{ borderLeft: '4px solid var(--accent-color)', padding: '1.5rem 2rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-              <div style={{ fontSize: '2.5rem' }}>🏆</div>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--accent-color)', fontWeight: '700', marginBottom: '0.25rem' }}>Top Overall Paper</div>
-                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem' }}>{winner.title}</h4>
-                <p style={{ margin: 0, fontSize: '0.85rem' }}>By {winner.author}</p>
-              </div>
-              <div style={{ textAlign: 'right' }}>
-                <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-primary)' }}>{winner.totalScore}</div>
-                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>pts</div>
-              </div>
-            </div>
 
-            {/* Oral Winner Card */}
-            {oralWinner && (
-              <div className="glass-panel animate-fade-in" style={{ borderLeft: '4px solid #f59e0b', padding: '1.5rem 2rem', display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                <div style={{ fontSize: '2.5rem' }}>🎤</div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#f59e0b', fontWeight: '700', marginBottom: '0.25rem' }}>Best Presentation</div>
-                  <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1.1rem' }}>{oralWinner.title}</h4>
-                  <p style={{ margin: 0, fontSize: '0.85rem' }}>By {oralWinner.author}</p>
-                </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '1.5rem', fontWeight: '800', color: 'var(--text-primary)' }}>{oralWinner.oralScore}</div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>pts</div>
-                </div>
-              </div>
-            )}
-            
-          </div>
-        </div>
-      )}
     </div>
   );
 }
