@@ -260,13 +260,10 @@ export default function AdminDashboard() {
                   ))}
                 </tbody>
               </table>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+
             </div>
           )}
+        </div>
         </div>
       ) : (
         <div className="glass-panel">
