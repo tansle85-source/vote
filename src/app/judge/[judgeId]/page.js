@@ -18,6 +18,7 @@ export default function JudgeScoring() {
   const [comment, setComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('scoring'); // 'scoring' or 'profile'
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   // Profile state
   const [profileForm, setProfileForm] = useState({ name: '', organization: '', email: '', password: '' });
@@ -66,6 +67,7 @@ export default function JudgeScoring() {
       ...prev,
       [criteriaId]: parseInt(score)
     }));
+    setHasUnsavedChanges(true);
   };
 
   const handleSubmit = async (e) => {
@@ -90,6 +92,7 @@ export default function JudgeScoring() {
       
       if (res.ok) {
         alert("Scores submitted successfully!");
+        setHasUnsavedChanges(false);
       } else {
         alert("Failed to submit scores.");
       }
@@ -149,7 +152,12 @@ export default function JudgeScoring() {
                 <button
                   key={paper.id}
                   onClick={() => {
+                    if (hasUnsavedChanges) {
+                      const confirmDiscard = confirm("You have unsubmitted scores. Are you sure you want to discard them and move to the next paper? (Click Cancel to stay and submit)");
+                      if (!confirmDiscard) return;
+                    }
                     setSelectedPaper(paper.id);
+                    setHasUnsavedChanges(false);
                     // Fetch existing marks and comment for this paper
                     fetch(`/api/marks?judge_id=${judgeId}&paper_id=${paper.id}`)
                       .then(res => res.json())
@@ -215,7 +223,10 @@ export default function JudgeScoring() {
                     rows="4" 
                     placeholder="Enter your comment and feedback here..."
                     value={comment}
-                    onChange={(e) => setComment(e.target.value)}
+                    onChange={(e) => {
+                      setComment(e.target.value);
+                      setHasUnsavedChanges(true);
+                    }}
                     style={{ width: '100%' }}
                   />
                 </div>
