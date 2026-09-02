@@ -18,10 +18,10 @@ export async function GET() {
       const paperMarks = marksData.filter(m => m.paper_id === paper.id);
       const paperComments = commentsData.filter(c => c.paper_id === paper.id);
       
-      const totalSum = paperMarks.reduce((sum, m) => sum + m.score, 0);
+      const mainMarks = paperMarks.filter(m => m.criteria_id !== oralCriteriaId);
+      const totalSum = mainMarks.reduce((sum, m) => sum + m.score, 0);
       
-      const uniqueJudges = new Set(paperMarks.map(m => m.judge_id)).size;
-      const divisor = uniqueJudges > 0 ? uniqueJudges : 1;
+      const divisor = 4; // Always divide by 4 judges
       
       const totalScore = parseFloat((totalSum / divisor).toFixed(2));
       
