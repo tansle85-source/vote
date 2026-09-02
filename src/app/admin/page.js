@@ -210,58 +210,101 @@ export default function AdminDashboard() {
           ) : leaderboard.length === 0 ? (
             <p>No papers submitted yet.</p>
           ) : (
-            <div style={{ overflowX: 'auto' }}>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Rank</th>
-                    <th>Paper Title</th>
-                    <th>Author</th>
-                    <th>Total Score</th>
-                    <th>Oral Score</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {leaderboard.map((paper, index) => (
-                    <tr key={paper.id}>
-                      <td>
-                        <strong>#{index + 1}</strong>
-                      </td>
-                      <td>{paper.title}</td>
-                      <td>{paper.author}</td>
-                      <td>
-                        <strong style={{ color: 'var(--accent-color)', fontSize: '1.2rem' }}>
-                          {paper.totalScore}
-                        </strong>
-                      </td>
-                      <td>
-                        <strong style={{ color: '#f59e0b', fontSize: '1.2rem' }}>
-                          {paper.oralScore !== undefined ? paper.oralScore : 0}
-                        </strong>
-                      </td>
-                      <td>    
-                        <button 
-                          onClick={() => setSelectedPaperDetails(paper)}
-                          className="btn btn-secondary" 
-                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem', marginRight: '0.5rem' }}
-                        >
-                          View
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(paper.id)}
-                          className="btn btn-secondary" 
-                          style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
-                        >
-                          Delete
-                        </button>
-                      </td>
+            <>
+              <h3 style={{ marginBottom: '1rem', marginTop: '0' }}>Overall Leaderboard</h3>
+              <div style={{ overflowX: 'auto', marginBottom: '3rem' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Paper Title</th>
+                      <th>Author</th>
+                      <th>Total Score</th>
+                      <th>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {leaderboard.map((paper, index) => (
+                      <tr key={paper.id}>
+                        <td>
+                          <strong>#{index + 1}</strong>
+                        </td>
+                        <td>{paper.title}</td>
+                        <td>{paper.author}</td>
+                        <td>
+                          <strong style={{ color: 'var(--accent-color)', fontSize: '1.2rem' }}>
+                            {paper.totalScore}
+                          </strong>
+                        </td>
+                        <td>    
+                          <button 
+                            onClick={() => setSelectedPaperDetails(paper)}
+                            className="btn btn-secondary" 
+                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem', marginRight: '0.5rem' }}
+                          >
+                            View
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(paper.id)}
+                            className="btn btn-secondary" 
+                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-            </div>
+              <h3 style={{ marginBottom: '1rem' }}>Oral Presentation Leaderboard</h3>
+              <div style={{ overflowX: 'auto' }}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Rank</th>
+                      <th>Paper Title</th>
+                      <th>Author</th>
+                      <th>Oral Score</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[...leaderboard].sort((a, b) => (b.oralScore || 0) - (a.oralScore || 0)).map((paper, index) => (
+                      <tr key={paper.id}>
+                        <td>
+                          <strong>#{index + 1}</strong>
+                        </td>
+                        <td>{paper.title}</td>
+                        <td>{paper.author}</td>
+                        <td>
+                          <strong style={{ color: '#f59e0b', fontSize: '1.2rem' }}>
+                            {paper.oralScore !== undefined ? paper.oralScore : 0}
+                          </strong>
+                        </td>
+                        <td>    
+                          <button 
+                            onClick={() => setSelectedPaperDetails(paper)}
+                            className="btn btn-secondary" 
+                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem', marginRight: '0.5rem' }}
+                          >
+                            View
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(paper.id)}
+                            className="btn btn-secondary" 
+                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem' }}
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
           )}
         </div>
         </div>
