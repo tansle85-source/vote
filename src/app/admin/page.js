@@ -15,6 +15,8 @@ export default function AdminDashboard() {
   const [papers, setPapers] = useState([]);
   const [leaderboard, setLeaderboard] = useState([]);
   const [newPaper, setNewPaper] = useState({ title: '', author: '', description: '' });
+  const [editingPaperId, setEditingPaperId] = useState(null);
+  const [editingPaper, setEditingPaper] = useState({ title: '', author: '', description: '' });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -123,6 +125,23 @@ export default function AdminDashboard() {
       fetchData();
     } catch (error) {
       console.error("Failed to add paper", error);
+    }
+  };
+
+  const handleEditPaper = async (e) => {
+    e.preventDefault();
+    if (!editingPaperId) return;
+    try {
+      await fetch(`/api/papers/${editingPaperId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editingPaper)
+      });
+      setEditingPaperId(null);
+      setEditingPaper({ title: '', author: '', description: '' });
+      fetchData();
+    } catch (error) {
+      console.error("Failed to edit paper", error);
     }
   };
 
@@ -243,6 +262,16 @@ export default function AdminDashboard() {
                             style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem', marginRight: '0.5rem' }}
                           >
                             View
+                          </button>
+                          <button 
+                            onClick={() => {
+                              setEditingPaperId(paper.id);
+                              setEditingPaper({ title: paper.title, author: paper.author, description: paper.description || '' });
+                            }}
+                            className="btn btn-secondary" 
+                            style={{ padding: '0.4rem 0.8rem', fontSize: '0.875rem', marginRight: '0.5rem' }}
+                          >
+                            Edit
                           </button>
                           <button 
                             onClick={() => handleDelete(paper.id)}
@@ -371,6 +400,43 @@ export default function AdminDashboard() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {editingPaperId && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '2rem' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '500px', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div className="flex justify-between items-center mb-4">
+              <h2>Edit Paper</h2>
+              <button onClick={() => setEditingPaperId(null)} className="btn btn-secondary">Close</button>
+            </div>
+            <form onSubmit={handleEditPaper}>
+              <label>Title</label>
+              <input 
+                type="text" 
+                required 
+                value={editingPaper.title}
+                onChange={(e) => setEditingPaper({...editingPaper, title: e.target.value})} 
+              />
+              
+              <label>Author(s)</label>
+              <input 
+                type="text" 
+                required 
+                value={editingPaper.author}
+                onChange={(e) => setEditingPaper({...editingPaper, author: e.target.value})} 
+              />
+              
+              <label>Description</label>
+              <textarea 
+                rows="3"
+                value={editingPaper.description}
+                onChange={(e) => setEditingPaper({...editingPaper, description: e.target.value})} 
+              />
+              
+              <button type="submit" className="btn" style={{ width: '100%', marginTop: '1rem' }}>Save Changes</button>
+            </form>
+          </div>
         </div>
       )}
 

@@ -27,7 +27,7 @@ export async function GET() {
       
       const oralMarks = paperMarks.filter(m => m.criteria_id === oralCriteriaId);
       const oralSum = oralMarks.reduce((sum, m) => sum + m.score, 0);
-      const oralScore = parseFloat((oralSum / divisor).toFixed(2));
+      const oralScore = oralSum;
       
       // Calculate detailed breakdown by judge
       const judgeDetails = judges.map(judge => {

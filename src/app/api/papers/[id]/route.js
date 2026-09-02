@@ -13,3 +13,22 @@ export async function DELETE(request, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
+
+export async function PUT(request, { params }) {
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const { title, author, description } = body;
+    
+    if (!title || !author) {
+      return NextResponse.json({ error: 'Title and author are required' }, { status: 400 });
+    }
+    
+    db.prepare('UPDATE papers SET title = ?, author = ?, description = ? WHERE id = ?')
+      .run(title, author, description, id);
+      
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+}
