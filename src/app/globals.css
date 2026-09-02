@@ -6,15 +6,15 @@
   --panel-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
   --panel-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
   
-  --accent-color: #2563eb;
-  --accent-hover: #1d4ed8;
-  --text-primary: #0f172a;
+  --accent-color: #0A8276;
+  --accent-hover: #076B60;
+  --text-primary: #1D1D1D;
   --text-secondary: #475569;
   --success-color: #059669;
   
   --input-bg: #ffffff;
   --input-border: #cbd5e1;
-  --input-focus: #3b82f6;
+  --input-focus: #0A8276;
 
   --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
@@ -63,7 +63,7 @@ h1, h2, h3, h4, h5, h6 {
 
 h1 {
   font-size: 2.5rem;
-  background: linear-gradient(to right, #2563eb, #7c3aed);
+  background: linear-gradient(to right, #0A8276, #0E9F90);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -92,13 +92,13 @@ p {
   text-decoration: none;
   background: var(--accent-color);
   color: white;
-  box-shadow: 0 4px 14px 0 rgba(37, 99, 235, 0.39);
+  box-shadow: 0 4px 14px 0 rgba(10, 130, 118, 0.39);
 }
 
 .btn:hover {
   background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 6px 20px rgba(10, 130, 118, 0.4);
 }
 
 .btn:disabled {
@@ -135,7 +135,7 @@ input, select, textarea {
 input:focus, select:focus, textarea:focus {
   outline: none;
   border-color: var(--input-focus);
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(10, 130, 118, 0.15);
 }
 
 input::placeholder, textarea::placeholder {
@@ -248,7 +248,7 @@ td {
   font-size: 1.25rem;
   text-decoration: none;
   color: var(--text-primary);
-  background: linear-gradient(to right, #2563eb, #7c3aed);
+  background: linear-gradient(to right, #0A8276, #0E9F90);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -296,7 +296,7 @@ input[type=range]::-webkit-slider-thumb {
   cursor: pointer;
   -webkit-appearance: none;
   margin-top: -7px;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 2px 6px rgba(10, 130, 118, 0.4);
   border: 2px solid white;
   transition: transform 0.1s;
 }
